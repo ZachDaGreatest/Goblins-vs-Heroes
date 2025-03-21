@@ -43,6 +43,7 @@ def frame_count_check(fx, fy, ff, fy_min, fy_max):
     if fx > 5:
         fx = 0
         fy += 1
-    if fy > fy_max:
-        fy = fy_min
-    return fx, fy, ff
+        if fy > fy_max:
+            fy = fy_min
+            return fx, fy, ff, True
+    return fx, fy, ff, False
