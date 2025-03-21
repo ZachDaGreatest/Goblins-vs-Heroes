@@ -11,35 +11,38 @@ class knight_handeler():
         # self.knight_image = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Factions\\Knights\\Troops\\Pawn\\Blue\\Pawn_Blue.png')
         self.knight_image = pygame.transform.scale_by(self.knight_image, .5)
         # each knight has a (position), image, and (frame position)
-        self.knights = []
+        self.heros = []
 
         self.knight_types = {
             'standard' : {
                 'max_health' : 100,
                 'image' : self.knight_image,
-                'attack_speed' : 180,
+                'attack_speed' : 120,
                 'damage' : 20
             }
         }
 
     def make_knight(self, pos, type):
-        self.knights.append(hero(type, self, pos))
+        self.heros.append(hero(type, self, pos))
 
     def frame_check(self):
-            for hero in self.knights:
+            for hero in self.heros:
                 if hero.frame_check() == False:
-                    self.knights.remove(hero)
+                    self.heros.remove(hero)
 
     def render_heros(self, screen):
-        for hero in self.knights:
+        for hero in self.heros:
             if hero.state != 'dead':
                 screen.blit(hero.image, (hero.pos[0]*64-16, 150+hero.pos[1]*64), (96*hero.fx, 96*hero.fy, 96, 96))
             else:
                 screen.blit(self.skull_image, (hero.pos[0]*64, 166+hero.pos[1]*64), (64*hero.fx, 64*hero.fy, 64, 64))
 
     def attack(self):
-         for hero in self.knights:
-              hero.attack()
-
-
-    # screen.blit(troop_handeler.knight_types[knight[2]][1], (knight[0][0]*64-16, 160+knight[0][1]*64), (96*knight[1][0], 96*knight[1][1], 96, 96))
+         for hero in self.heros:
+            hero.attack()
+    
+    def check_empty(self, pos):
+        for hero in self.heros:
+            if (pos[0]-.5 < hero.pos[0] < pos[0]+.5) and (pos[1]-.5 < hero.pos[1] < pos[1]+.5):
+                return False
+        return True
