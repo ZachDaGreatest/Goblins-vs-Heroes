@@ -55,7 +55,6 @@ class hero_handler():
     # pos needs to be converted from pixel cords to game cords
     def check_empty(self, pos, sf):
         x,y = convert_to_game_cords(pos, sf)
-        print(x,y)
         # if the space is not part of the spawnable grid it returns false
         if x > 6 or y < 0:
             return False
