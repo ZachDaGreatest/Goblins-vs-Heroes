@@ -52,10 +52,15 @@ class hero_handler():
             hero.attack()
     
     # feed a click pos (pixel based) and it will check if there is a hero at that pos
-    # if a hero is at the position it returns false since the space is not empty
-    # everything based on screen units needs to be multiplied by a scale factor (sf)
+    # pos needs to be converted from pixel cords to game cords
     def check_empty(self, pos, sf):
+        x,y = convert_to_game_cords(pos, sf)
+        print(x,y)
+        # if the space is not part of the spawnable grid it returns false
+        if x > 6 or y < 0:
+            return False
+        # if a hero is at the position it returns false since the space is not empty
         for hero in self.heros:
-            if convert_to_game_cords(pos, sf) == hero.pos:
+            if (x,y) == hero.pos:
                 return False
         return True

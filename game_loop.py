@@ -48,7 +48,7 @@ while gamin:
                 troop_handeler.attack()
         if event.type == pygame.MOUSEBUTTONDOWN:
             x, y = pygame.mouse.get_pos()
-            # example of using check empty, prints false if hero is in square
+            # example of using check empty, prints false if hero is in square/it isn't swapnable
             # animation testing, if you click near a hero they die, otherwise places hero
             # could be an example of the way a shop place function would work
             if troop_handeler.check_empty(pygame.mouse.get_pos(), scale_factor):
