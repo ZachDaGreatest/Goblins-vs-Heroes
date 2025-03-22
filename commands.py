@@ -67,7 +67,7 @@ def convert_to_game_cords(pos, scale_factor):
     x = pos[0]
     y = pos[1]
     new_x = int(x/64/scale_factor)
-    new_y = round((y-150)/64/scale_factor, 0)-1
+    new_y = round((y-126)/64/scale_factor, 0)-1
     return (new_x, new_y)
 
 # this function takes game cords from logic and turns it into pixel cords
