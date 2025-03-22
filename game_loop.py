@@ -19,11 +19,15 @@ def make_knights():
                 troop_handeler.make_hero((x,y), 'standard')
 
 # all screen initiation is temporary and will be moved to main
-# 360 * 640 is the standard ratio
-screen = pygame.display.set_mode((640, 360))
+# screen is the object that gets drawn on, then it is scaled onto display
+# 360 * 640 is the standard ratio which is 16/9
+# scale factor is used for anything that uses screen units
+HEIGHT = 360
+WIDTH = HEIGHT*16/9
+scale_factor = HEIGHT/360
+display = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.Surface((640, 360))
 pygame.display.set_caption('Heros vs Goblins')
-screen.fill((0,0,0))
-pygame.display.flip()
 
 # the while loop is where the game happens
 gamin = True
@@ -33,7 +37,7 @@ while gamin:
 
     # event handeler is for all imputs
     for event in pygame.event.get():
-        # pressing escape or the x stops the game
+        # pressing escape stops the game
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 gamin = False
@@ -43,12 +47,15 @@ while gamin:
             if event.key == pygame.K_SPACE:
                 troop_handeler.attack()
         if event.type == pygame.MOUSEBUTTONDOWN:
-            x, y = pygame.mouse.get_pos()
+            # example of using check empty, prints false if hero is in square
+            # print(troop_handeler.check_empty(pygame.mouse.get_pos(), scale_factor))
             # animation testing, if you click near a hero they die
+            x, y = pygame.mouse.get_pos()
             for hero in troop_handeler.heros:
-                if (hero.pos[0]*64-16 + 96 > x > hero.pos[0]*64-16) and  (150+hero.pos[1]*64 + 96 > y > 150+hero.pos[1]*64):
+                if ((hero.pos[0]*64-16 + 96)*scale_factor > x > (hero.pos[0]*64-16)*scale_factor) and  ((150+hero.pos[1]*64 + 96)*scale_factor > y > (150+hero.pos[1]*64)*scale_factor):
                     hero.attack()
                     hero.take_damage(100)
+        # clicking the x stops the game
         if event.type == pygame.QUIT:
             gamin = False
 
@@ -62,6 +69,11 @@ while gamin:
 
     # this line is for testing frame rate based on hero amounts
     # print(game_clock.get_fps(), len(troop_handeler.heros))
+
+    # the screen that has everything drawn on it is scaled and put on the actual display
+    # temp_screen stores the transformed screen without changing the scale of screen
+    temp_screen = pygame.transform.scale_by(screen, scale_factor)
+    display.blit(temp_screen, (0,0))
 
     # this updates the screen to all of the changes
     pygame.display.flip()

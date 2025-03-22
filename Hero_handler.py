@@ -50,10 +50,11 @@ class hero_handler():
          for hero in self.heros:
             hero.attack()
     
-    # feed a game pos (not based on pixels) and it will check if there is a hero at that pos
+    # feed a click pos (pixel based) and it will check if there is a hero at that pos
     # if a hero is at the position it returns false since the space is not empty
-    def check_empty(self, pos):
+    # everything based on screen units needs to be multiplied by a scale factor (sf)
+    def check_empty(self, pos, sf):
         for hero in self.heros:
-            if (pos[0]-.5 < hero.pos[0] < pos[0]+.5) and (pos[1]-.5 < hero.pos[1] < pos[1]+.5):
+            if (pos[0]-32*sf < (hero.pos[0]*64+32)*sf < pos[0]+32*sf) and (pos[1]-32*sf < (hero.pos[1]*64+198)*sf < pos[1]+32*sf):
                 return False
         return True
