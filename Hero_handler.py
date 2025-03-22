@@ -1,5 +1,6 @@
 import pygame
 from Hero import hero
+from commands import convert_to_game_cords, convert_to_pixel_cords
 
 # the hero handeler is for doing things with every hero
 # Ex: drawing sprites, checking occupied spaces, preforming frame checks
@@ -41,9 +42,9 @@ class hero_handler():
     def render_heros(self, screen):
         for hero in self.heros:
             if hero.state != 'dead':
-                screen.blit(hero.image, (hero.pos[0]*64-16, 150+hero.pos[1]*64), (96*hero.fx, 96*hero.fy, 96, 96))
+                screen.blit(hero.image, convert_to_pixel_cords(hero.pos, 1, -16, 0), (96*hero.fx, 96*hero.fy, 96, 96))
             else:
-                screen.blit(self.skull_image, (hero.pos[0]*64, 166+hero.pos[1]*64), (64*hero.fx, 64*hero.fy, 64, 64))
+                screen.blit(self.skull_image, (convert_to_pixel_cords(hero.pos, 1, 0, 16)), (64*hero.fx, 64*hero.fy, 64, 64))
 
     # this command is for debugging
     def attack(self):
@@ -55,6 +56,6 @@ class hero_handler():
     # everything based on screen units needs to be multiplied by a scale factor (sf)
     def check_empty(self, pos, sf):
         for hero in self.heros:
-            if (pos[0]-32*sf < (hero.pos[0]*64+32)*sf < pos[0]+32*sf) and (pos[1]-32*sf < (hero.pos[1]*64+198)*sf < pos[1]+32*sf):
+            if convert_to_game_cords(pos, sf) == hero.pos:
                 return False
         return True

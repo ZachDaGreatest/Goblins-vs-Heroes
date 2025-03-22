@@ -61,3 +61,20 @@ def frame_count_check(fx, fy, ff, fy_min, fy_max):
             # the frame that the image is set back to the beginning it returns true alongside the updated values
             return fx, fy, ff, True
     return fx, fy, ff, False
+
+# this function takes pixel cords from a click and turns it into game cords
+def convert_to_game_cords(pos, scale_factor):
+    x = pos[0]
+    y = pos[1]
+    new_x = int(x/64/scale_factor)
+    new_y = int((y-150)/64/scale_factor)
+    return (new_x, new_y)
+
+# this function takes game cords from logic and turns it into pixel cords
+# most sprites need an offset from the true tile position
+def convert_to_pixel_cords(pos, scale_factor, x_offset, y_offset):
+    x = pos[0]
+    y = pos[1]
+    new_x = int(x*64*scale_factor)+x_offset
+    new_y = int((150+y*64)*scale_factor)+y_offset
+    return (new_x, new_y)

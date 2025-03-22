@@ -1,5 +1,5 @@
 import pygame
-from commands import render_forground
+from commands import render_forground, convert_to_game_cords
 from Hero_handler import hero_handler
 from random import randint
 
@@ -47,14 +47,17 @@ while gamin:
             if event.key == pygame.K_SPACE:
                 troop_handeler.attack()
         if event.type == pygame.MOUSEBUTTONDOWN:
-            # example of using check empty, prints false if hero is in square
-            # print(troop_handeler.check_empty(pygame.mouse.get_pos(), scale_factor))
-            # animation testing, if you click near a hero they die
             x, y = pygame.mouse.get_pos()
-            for hero in troop_handeler.heros:
-                if ((hero.pos[0]*64-16 + 96)*scale_factor > x > (hero.pos[0]*64-16)*scale_factor) and  ((150+hero.pos[1]*64 + 96)*scale_factor > y > (150+hero.pos[1]*64)*scale_factor):
-                    hero.attack()
-                    hero.take_damage(100)
+            # example of using check empty, prints false if hero is in square
+            # animation testing, if you click near a hero they die, otherwise places hero
+            # could be an example of the way a shop place function would work
+            if troop_handeler.check_empty(pygame.mouse.get_pos(), scale_factor):
+                troop_handeler.make_hero(convert_to_game_cords((x,y), scale_factor), 'standard')
+            else:
+                for hero in troop_handeler.heros:
+                    if hero.pos == convert_to_game_cords((x,y), scale_factor):
+                        hero.attack()
+                        hero.take_damage(100)
         # clicking the x stops the game
         if event.type == pygame.QUIT:
             gamin = False
