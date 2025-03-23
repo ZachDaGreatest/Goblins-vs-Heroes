@@ -2,7 +2,7 @@ import pygame
 from Hero import hero
 from commands import convert_to_game_cords, convert_to_pixel_cords
 
-# the hero handeler is for doing things with every hero
+# the hero handler is for doing things with every hero
 # Ex: drawing sprites, checking occupied spaces, preforming frame checks
 class hero_handler():
     def __init__(self):

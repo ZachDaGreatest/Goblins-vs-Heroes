@@ -45,7 +45,7 @@ def render_forground(screen):
                 screen.blit(banner, (640-64*collum_num, 328-64*row_num), (0, 0, 64, 64))
 
 # this iterating through the images of an animation where all sprites are on one png
-def frame_count_check(fx, fy, ff, fy_min, fy_max):
+def frame_count_check(fx, fy, ff, fx_min, fx_max, fy_min, fy_max):
     # the frame count is updated
     ff += 1
     # the sprite is changed every 6 frames
@@ -53,8 +53,8 @@ def frame_count_check(fx, fy, ff, fy_min, fy_max):
         ff = 0
         fx += 1
     # if the image is the last image in the row, the row is moved down and the collum is set to the beginning
-    if fx > 5:
-        fx = 0
+    if fx > fx_max:
+        fx = fx_min
         fy += 1
         if fy > fy_max:
             fy = fy_min

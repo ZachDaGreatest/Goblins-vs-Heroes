@@ -2,10 +2,10 @@ from commands import frame_count_check
 
 # the hero class is the base object for all heros
 class hero():
-    # a hero needs its type, handeler, and game pos
-    def __init__(self, type, handeler, pos):
+    # a hero needs its type, handler, and game pos
+    def __init__(self, type, handler, pos):
         # type info is the dictionary with all type info
-        self.type_info = handeler.hero_types[type]
+        self.type_info = handler.hero_types[type]
         # if it starts with an f it is for frame logic (animations)
         self.fx = 0
         self.fy = 0
@@ -38,7 +38,7 @@ class hero():
             min_y = 0
             max_y = 0
         # the frame pos is updated
-        self.fx, self.fy, self.ff, animation_reset = frame_count_check(self.fx, self.fy, self.ff, min_y, max_y)
+        self.fx, self.fy, self.ff, animation_reset = frame_count_check(self.fx, self.fy, self.ff, 0, 5, min_y, max_y)
         # if the animation reset and the hero is dead it returns false which removes the hero
         if animation_reset == True and self.state == 'dead':
             return False
