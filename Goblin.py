@@ -17,6 +17,7 @@ class goblin():
         self.attack_speed = self.type_info['attack_speed']
         self.damage = self.type_info['damage']
         self.speed = self.type_info['speed']
+        self.range = self.type_info['range']
         # sets pos to the fed game cordinates (not based on pixels)
         self.pos = pos
         # sets state and state_frames to the default of 'idle' and 0
@@ -25,10 +26,12 @@ class goblin():
         # animation inverted is to play the running animation
         self.animation_invert = False
 
-    # FIXME when doing running animation it needs to repeat backwards
-    def frame_check(self):
+    def frame_check(self, hero_handler):
         # checks to make sure the goblin is still alive
         self.health_check()
+        # if the goblin is idle it runs an attack check
+        if self.state == 'idle':
+            self.attack_check(hero_handler)
         # if the goblin isn't idle then tick down the frames left in that state
         if self.state != 'idle':
             self.state_frames -= 1
@@ -45,8 +48,12 @@ class goblin():
         else:
             min_y = 1
             max_y = 1
+        if self.animation_invert:
+            max_x = 3
+        else:
+            max_x = 5
         # the frame pos is updated
-        self.fx, self.fy, self.ff, animation_reset = frame_count_check(self.fx, self.fy, self.ff, 1, 5, min_y, max_y)
+        self.fx, self.fy, self.ff, animation_reset = frame_count_check(self.fx, self.fy, self.ff, 1, max_x, min_y, max_y)
         # if the animation reset and the goblin is dead it returns false which removes the goblin
         if animation_reset == True and self.state == 'dead':
             return False
@@ -56,6 +63,9 @@ class goblin():
         if self.state != 'idle' and self.state_frames <= 0 and self.state != 'dead':
             self.state = 'idle'
             self.fy = 1
+        if self.pos[0] < -1:
+            self.state = 'dead'
+            # TODO make it so this damages the player
         # if the goblin didn't just finish the dead animation it will return true keeping the goblin around
         return True
     
@@ -68,6 +78,21 @@ class goblin():
             # state_frames is the amount of frames before the goblin returns to idle
             self.state_frames = self.attack_speed
             self.animation_invert = False
+    
+    def attack_check(self, hero_handler):
+        x = int(self.pos[0])+1-self.range
+        y = self.pos[1]
+        current_range = self.range
+        while current_range >= 0:
+            if x <= 6:
+                if not hero_handler.check_empty((x,y), 1, True):
+                    self.attack()
+                    hero_handler.damage_hero((x,y), self.damage)
+                    return
+                current_range -= 1
+                x += 1
+            else:
+                return
 
     def health_check(self):
         # if the goblin's health is 0 or less the state is set to dead and the animation pos is reset

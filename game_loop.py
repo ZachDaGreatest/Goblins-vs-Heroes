@@ -59,10 +59,12 @@ while gamin:
         if event.type == pygame.MOUSEBUTTONDOWN:
             x, y = pygame.mouse.get_pos()
             x, y = convert_to_game_cords((x,y), scale_factor)
+            if troop_handler.check_empty((x,y), scale_factor, True):
+                troop_handler.make_hero((x,y), 'standard')
             # example of using check empty, prints false if hero is in square/it isn't swapnable
             # animation testing, if you click near a hero they die, otherwise places hero
             # could be an example of the way a shop place function would work
-            if not troop_handler.check_empty(pygame.mouse.get_pos(), scale_factor):
+            elif not troop_handler.check_empty(pygame.mouse.get_pos(), scale_factor, False):
                 for hero in troop_handler.heros:
                     if hero.pos == (x,y):
                         hero.attack()
@@ -78,8 +80,8 @@ while gamin:
             gamin = False
 
     # frame check is where most game functions occur
-    troop_handler.frame_check()
-    enemy_handler.frame_check()
+    troop_handler.frame_check(enemy_handler)
+    enemy_handler.frame_check(troop_handler)
 
     # the screen is drawn over with a solid color and then all objects are drawn on
     screen.fill((0,255,255))
@@ -88,7 +90,7 @@ while gamin:
     enemy_handler.render_goblins(screen)
 
     # this line is for testing frame rate based on object amounts
-    # print(f'{len(troop_handler.heros)} knights and {len(enemy_handler.goblins)} goblins running at {game_clock.get_fps()} fps')
+    print(f'there are {len(troop_handler.heros)} knights and {len(enemy_handler.goblins)} goblins running at {game_clock.get_fps()} fps')
 
     # the screen that has everything drawn on it is scaled and put on the actual display
     # temp_screen stores the transformed screen without changing the scale of screen

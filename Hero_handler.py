@@ -24,7 +24,8 @@ class hero_handler():
                 'max_health' : 100,
                 'image' : self.knight_image,
                 'attack_speed' : 120,
-                'damage' : 20
+                'damage' : 40,
+                'range' : 1
             }
         }
 
@@ -33,9 +34,9 @@ class hero_handler():
         self.heros.append(hero(type, self, pos))
 
     # the hero.frame_check returns false if they have 0 health or less
-    def frame_check(self):
+    def frame_check(self, goblin_handler):
             for hero in self.heros:
-                if hero.frame_check() == False:
+                if hero.frame_check(goblin_handler) == False:
                     self.heros.remove(hero)
 
     # if the hero is dead the image is smaller so it needs a different blit command
@@ -53,8 +54,11 @@ class hero_handler():
     
     # feed a click pos (pixel based) and it will check if there is a hero at that pos
     # pos needs to be converted from pixel cords to game cords
-    def check_empty(self, pos, sf):
-        x,y = convert_to_game_cords(pos, sf)
+    def check_empty(self, pos, sf, is_game_cords):
+        if not is_game_cords:
+            x,y = convert_to_game_cords(pos, sf)
+        else:
+            x,y = pos
         # if the space is not part of the spawnable grid it returns false
         if x > 6 or y < 0:
             return False
@@ -63,3 +67,8 @@ class hero_handler():
             if (x,y) == hero.pos:
                 return False
         return True
+    
+    def damage_hero(self, pos, damage):
+        for hero in self.heros:
+            if hero.pos == pos:
+                hero.take_damage(damage)

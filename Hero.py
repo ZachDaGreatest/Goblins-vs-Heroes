@@ -17,15 +17,19 @@ class hero():
         self.image = self.type_info['image']
         self.attack_speed = self.type_info['attack_speed']
         self.damage = self.type_info['damage']
+        self.range = self.type_info['range']
         # sets pos to the fed game cordinates (not based on pixels)
         self.pos = pos
         # sets state and state_frames to the default of 'idle' and 0
         self.state = 'idle'
         self.state_frames = 0
 
-    def frame_check(self):
+    def frame_check(self, goblin_handler):
         # checks to make sure the hero is still alive
         self.health_check()
+        # if the hero is idle it runs an attack check
+        if self.state == 'idle':
+            self.attack_check(goblin_handler)
         # if the hero isn't idle then tick down the frames left in that state
         if self.state != 'idle':
             self.state_frames -= 1
@@ -56,6 +60,13 @@ class hero():
             self.fy = 2
             # state_frames is the amount of frames before the hero returns to idle
             self.state_frames = self.attack_speed
+
+    def attack_check(self, goblin_handler):
+        if self.state == 'idle':
+            x, y = self.pos
+            x_max = x + self.range
+            if goblin_handler.check_area(y, x, x_max, self.damage):
+                self.attack()
 
     def health_check(self):
         # if the hero's health is 0 or less the state is set to dead and the animation pos is reset

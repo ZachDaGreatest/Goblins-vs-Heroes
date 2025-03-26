@@ -22,16 +22,17 @@ class goblin_handler():
                 'image' : self.goblin_image,
                 'attack_speed' : 120,
                 'damage' : 5,
-                'speed' : 1/120
+                'speed' : 1/120,
+                'range' : 1
             }
         }
     
     def spawn_goblin(self, pos, type):
         self.goblins.append(goblin(type, self, pos))
 
-    def frame_check(self):
+    def frame_check(self, hero_handler):
         for goblin in self.goblins:
-            if goblin.frame_check() == False:
+            if goblin.frame_check(hero_handler) == False:
                 self.goblins.remove(goblin)
 
     # if the goblin is dead the image is smaller so it needs a different blit command
@@ -39,7 +40,7 @@ class goblin_handler():
         for goblin in self.goblins:
             if goblin.state != 'dead':
                 if goblin.animation_invert:
-                    screen.blit(goblin.image, convert_to_pixel_cords(goblin.pos, 1, -16, 0), ((96*goblin.fx), 96*goblin.fy, 96, 96))
+                    screen.blit(goblin.image, convert_to_pixel_cords(goblin.pos, 1, -16, 0), ((96*goblin.fx)+192, 96*goblin.fy, 96, 96))
                 else:
                     screen.blit(goblin.image, convert_to_pixel_cords(goblin.pos, 1, -16, 0), (672-(96*goblin.fx), 96*goblin.fy, 96, 96))
             else:
@@ -48,3 +49,17 @@ class goblin_handler():
     def attack(self):
         for goblin in self.goblins:
             goblin.attack()
+
+    def damage_goblin(self, pos, damage):
+        for goblin in self.goblins:
+            if goblin.pos == pos:
+                goblin.take_damage(damage)
+
+    def check_area(self, row, collum_start, collum_end, damage):
+        for goblin in self.goblins:
+            gx, gy = goblin.pos
+            if row == gy:
+                if collum_start < gx < collum_end:
+                    goblin.take_damage(damage)
+                    return True
+        return False
