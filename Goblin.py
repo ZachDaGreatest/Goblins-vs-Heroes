@@ -80,19 +80,11 @@ class goblin():
             self.animation_invert = False
     
     def attack_check(self, hero_handler):
-        x = int(self.pos[0])+1-self.range
-        y = self.pos[1]
-        current_range = self.range
-        while current_range >= 0:
-            if x <= 6:
-                if not hero_handler.check_empty((x,y), 1, True):
-                    self.attack()
-                    hero_handler.damage_hero((x,y), self.damage)
-                    return
-                current_range -= 1
-                x += 1
-            else:
-                return
+        if self.state == 'idle':
+            x_max, y = self.pos
+            x = x_max - self.range
+            if hero_handler.check_area(y, x, x_max, self.damage):
+                self.attack()
 
     def health_check(self):
         # if the goblin's health is 0 or less the state is set to dead and the animation pos is reset

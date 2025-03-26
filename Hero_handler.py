@@ -72,3 +72,12 @@ class hero_handler():
         for hero in self.heros:
             if hero.pos == pos:
                 hero.take_damage(damage)
+
+    def check_area(self, row, collum_start, collum_end, damage):
+        for hero in self.heros:
+            hx, hy = hero.pos
+            if row == hy:
+                if collum_start < hx < collum_end:
+                    hero.take_damage(damage)
+                    return True
+        return False
