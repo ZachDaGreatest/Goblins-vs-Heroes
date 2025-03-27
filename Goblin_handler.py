@@ -60,6 +60,7 @@ class goblin_handler():
             gx, gy = goblin.pos
             if row == gy:
                 if collum_start < gx < collum_end:
-                    goblin.take_damage(damage)
-                    return True
+                    if goblin.state != 'dead':
+                        goblin.take_damage(damage)
+                        return True
         return False

@@ -26,6 +26,13 @@ class hero_handler():
                 'attack_speed' : 120,
                 'damage' : 40,
                 'range' : 1
+            },
+            'pawn' : {
+                'max_health' : 60,
+                'image' : self.pawn_image,
+                'attack_speed' : 60,
+                'damage' : 10,
+                'range' : 1
             }
         }
 
@@ -78,6 +85,7 @@ class hero_handler():
             hx, hy = hero.pos
             if row == hy:
                 if collum_start < hx < collum_end:
-                    hero.take_damage(damage)
-                    return True
+                    if hero.state != 'dead':
+                        hero.take_damage(damage)
+                        return True
         return False

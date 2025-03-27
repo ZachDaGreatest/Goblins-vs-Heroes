@@ -17,8 +17,7 @@ game_clock = pygame.time.Clock()
 def make_knights():
     for x in range(7):
         for y in range(3):
-            if randint(0,1) == 1:
-                troop_handler.make_hero((x,y), 'standard')
+            troop_handler.make_hero((x,y), 'pawn')
 
 def make_goblins():
     for y in range(3):
@@ -35,11 +34,16 @@ display = pygame.display.set_mode((WIDTH, HEIGHT))
 screen = pygame.Surface((640, 360))
 pygame.display.set_caption('Heros vs Goblins')
 
+frame = 0
+
 # the while loop is where the game happens
 gamin = True
 while gamin:
     # tick sets the fps, the game is built around 60 fps
     game_clock.tick(60)
+    frame += 1
+    if frame % 240 == 0:
+        make_goblins()
 
     # event handeler is for all imputs
     for event in pygame.event.get():
