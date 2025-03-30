@@ -5,6 +5,8 @@ Arrow shot through air https://mixkit.co/free-sound-effects/medieval-battle/ is 
 Impact of a blow https://mixkit.co/free-sound-effects/hit/ is hit sound
 spawn sound is https://pixabay.com/sound-effects/thud-sound-effect-319090/ 
 lego death is https://tuna.voicemod.net/sound/9a9a1207-9d4d-49a6-92c1-4827fe1e9506
+scream death is https://tuna.voicemod.net/sound/776f023d-1bb4-4365-a5ea-f6e0069695f8
+roblox death is https://tuna.voicemod.net/sound/0c1898d8-28fa-4796-8b52-7cc0a9b9b3c8
 troop spawn is https://tuna.voicemod.net/sound/f6ebeb9f-b314-4dc5-872b-9d0a77b38525 
 '''
 
@@ -97,7 +99,7 @@ while gamin:
             x, y = pygame.mouse.get_pos()
             x, y = convert_to_game_cords((x,y), scale_factor)
             if troop_handler.check_empty((x,y), scale_factor, True):
-                troop_handler.make_hero((x,y), 'archer')
+                troop_handler.make_hero((x,y), 'standard')
             # example of using check empty, prints false if hero is in square/it isn't swapnable
             # animation testing, if you click near a hero they die, otherwise places hero
             # could be an example of the way a shop place function would work

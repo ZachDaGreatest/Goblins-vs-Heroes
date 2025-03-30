@@ -37,7 +37,7 @@ class sound_handler():
     def play(self, sound_type):
         if sound_type == 'sword' and self.sword_available:
             self.sword_available = False
-            self.sound_effects[sound_type]
+            self.sound_effects[sound_type].play()
 
         if sound_type == 'hammer' and self.hammer_available:
             self.hammer_available = False

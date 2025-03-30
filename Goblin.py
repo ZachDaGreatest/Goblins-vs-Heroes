@@ -41,6 +41,12 @@ class goblin():
             self.state_frames -= 1
         else:
             self.move(self.speed)
+        # the attack sound and damage are delayed from the start of the animation
+        if self.state == 'attacking' and self.state_frames == self.attack_speed-18:
+            self.sound_handler.play('torch')
+            x_max, y = self.pos
+            x = x_max - self.range
+            hero_handler.check_area(y, x, x_max, self.damage)
         # the dead state is the only state that needs multiple lines of animation
         # so if the state is dead then the max pos is increased
         if self.state == 'dead':
@@ -76,7 +82,6 @@ class goblin():
     def attack(self):
         # if the goblin isn't doing anything it is now attacking
         if self.state == 'idle':
-            self.sound_handler.play('torch')
             self.state = 'attacking'
             self.fx = 1
             self.fy = 2
@@ -88,7 +93,7 @@ class goblin():
         if self.state == 'idle':
             x_max, y = self.pos
             x = x_max - self.range
-            if hero_handler.check_area(y, x, x_max, self.damage):
+            if hero_handler.check_area(y, x, x_max, 0):
                 self.attack()
 
     def health_check(self):
