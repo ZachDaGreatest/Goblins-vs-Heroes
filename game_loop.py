@@ -1,7 +1,19 @@
+'''
+metal hit whoosh https://mixkit.co/free-sound-effects/sword/ is sword sound
+hammer hit on wood https://mixkit.co/free-sound-effects/discover/hammer/ is hammer sound
+Arrow shot through air https://mixkit.co/free-sound-effects/medieval-battle/ is bow sound
+Impact of a blow https://mixkit.co/free-sound-effects/hit/ is hit sound
+spawn sound is https://pixabay.com/sound-effects/thud-sound-effect-319090/ 
+lego death is https://tuna.voicemod.net/sound/9a9a1207-9d4d-49a6-92c1-4827fe1e9506
+troop spawn is https://tuna.voicemod.net/sound/f6ebeb9f-b314-4dc5-872b-9d0a77b38525 
+'''
+
+
 import pygame
 from commands import render_forground, convert_to_game_cords, convert_to_pixel_cords
 from Hero_handler import hero_handler
 from Goblin_handler import goblin_handler
+from Sound_handler import sound_handler
 from random import randint, choice
 
 # this file will eventually be turned into a funtion for the menu to call
@@ -9,9 +21,14 @@ from random import randint, choice
 # all functions/classes are initiated
 pygame.init()
 pygame.font.init()
-troop_handler = hero_handler()
-enemy_handler = goblin_handler()
+pygame.mixer.init()
+sound_manager = sound_handler()
+troop_handler = hero_handler(sound_manager)
+enemy_handler = goblin_handler(sound_manager)
 game_clock = pygame.time.Clock()
+pygame.mixer.music.load('fear music.mp3')
+pygame.mixer.music.set_volume(.5)
+pygame.mixer.music.play()
 
 # make_heros is for testing and randomly puts random hero on each square
 # heros = ['pawn', 'standard', 'archer']
@@ -80,7 +97,7 @@ while gamin:
             x, y = pygame.mouse.get_pos()
             x, y = convert_to_game_cords((x,y), scale_factor)
             if troop_handler.check_empty((x,y), scale_factor, True):
-                troop_handler.make_hero((x,y), 'standard')
+                troop_handler.make_hero((x,y), 'archer')
             # example of using check empty, prints false if hero is in square/it isn't swapnable
             # animation testing, if you click near a hero they die, otherwise places hero
             # could be an example of the way a shop place function would work
@@ -116,6 +133,10 @@ while gamin:
     # temp_screen stores the transformed screen without changing the scale of screen
     temp_screen = pygame.transform.scale_by(screen, scale_factor)
     display.blit(temp_screen, (0,0))
+
+    # this alows all sound fx that have been played to be played next frame
+    if frame % 5 == 0:
+        sound_manager.reset_availability()
 
     # this updates the screen to all of the changes
     pygame.display.flip()

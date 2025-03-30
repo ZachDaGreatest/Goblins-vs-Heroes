@@ -1,8 +1,9 @@
 from commands import frame_count_check
+import pygame
 
 class goblin():
     # a goblin needs its type, handler, and game pos
-    def __init__(self, type, handler, pos):
+    def __init__(self, type, handler, pos, sound_handler):
         # type info is the dictionary with all type info
         self.type_info = handler.goblin_types[type]
         # if it starts with an f it is for frame logic (animations)
@@ -25,10 +26,13 @@ class goblin():
         self.state_frames = 0
         # animation inverted is to play the running animation
         self.animation_invert = False
+        # using the handler prevents overlap of sound attacks between objects
+        self.sound_handler = sound_handler
 
     def frame_check(self, hero_handler):
         # checks to make sure the goblin is still alive
-        self.health_check()
+        if self.state != 'dead':
+            self.health_check()
         # if the goblin is idle it runs an attack check
         if self.state == 'idle':
             self.attack_check(hero_handler)
@@ -72,6 +76,7 @@ class goblin():
     def attack(self):
         # if the goblin isn't doing anything it is now attacking
         if self.state == 'idle':
+            self.sound_handler.play('torch')
             self.state = 'attacking'
             self.fx = 1
             self.fy = 2
@@ -94,6 +99,7 @@ class goblin():
                 self.fy = 0
                 self.state = 'dead'
                 self.animation_invert = False
+                self.sound_handler.play('death')
     
     # this allows outside functions to interact with the health of a goblin
     def take_damage(self, damage):

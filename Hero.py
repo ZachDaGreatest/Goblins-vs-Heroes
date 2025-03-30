@@ -1,9 +1,10 @@
 from commands import frame_count_check
+import pygame
 
 # the hero class is the base object for all heros
 class hero():
     # a hero needs its type, handler, and game pos
-    def __init__(self, type, handler, pos):
+    def __init__(self, type, handler, pos, sound_handler):
         # type info is the dictionary with all type info
         self.type_info = handler.hero_types[type]
         # if it starts with an f it is for frame logic (animations)
@@ -19,6 +20,7 @@ class hero():
         self.damage = self.type_info['damage']
         self.range = self.type_info['range']
         self.is_ranged = self.type_info['is ranged']
+        self.sound = self.type_info['sound']
         # sets pos to the fed game cordinates (not based on pixels)
         self.pos = pos
         # sets state and state_frames to the default of 'idle' and 0
@@ -29,10 +31,13 @@ class hero():
             self.arrows = []
             self.arrow_damage = self.damage
             self.damage = 0
+        # using the handler prevents overlap of sound attacks between objects
+        self.sound_handler = sound_handler
 
     def frame_check(self, goblin_handler):
         # checks to make sure the hero is still alive
-        self.health_check()
+        if self.state != 'dead':
+            self.health_check()
         # if the hero is idle it runs an attack check
         if self.state == 'idle':
             self.attack_check(goblin_handler)
@@ -50,12 +55,18 @@ class hero():
         if self.is_ranged and self.state == 'attacking':
             if self.state_frames == self.attack_speed-36:
                 self.arrows.append(self.pos)
+                self.sound_handler.play(self.sound)
             if self.state_frames > self.attack_speed-60:
                 max_x = 7
             else:
                 max_x = 5
         else:
             max_x = 5
+        if self.state == 'attacking' and self.state_frames == self.attack_speed-18 and not self.is_ranged:
+            self.sound_handler.play(self.sound)
+            x, y = self.pos
+            x_max = x + self.range
+            goblin_handler.check_area(y, x, x_max, self.damage)
         if self.is_ranged:
             temp_arrows = self.arrows
             self.arrows = []
@@ -91,7 +102,7 @@ class hero():
         if self.state == 'idle':
             x, y = self.pos
             x_max = x + self.range
-            if goblin_handler.check_area(y, x, x_max, self.damage):
+            if goblin_handler.check_area(y, x, x_max, 0):
                 self.attack()
 
     def health_check(self):
@@ -101,7 +112,9 @@ class hero():
                 self.fx = 0
                 self.fy = 0
                 self.state = 'dead'
+                self.sound_handler.play('death')
     
     # this allows outside functions to interact with the health of a hero
     def take_damage(self, damage):
+        self.sound_handler.play('hit')
         self.health -= damage

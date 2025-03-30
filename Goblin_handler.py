@@ -3,7 +3,7 @@ from commands import convert_to_pixel_cords
 from Goblin import goblin
 
 class goblin_handler():
-    def __init__(self):
+    def __init__(self, sound_handler):
         # all images have to be loaded and scaled down by 50%, goblins need to be flipped to face the right way
         self.blue_goblin_image = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Factions\\Goblins\\Troops\\Torch\\Blue\\Torch_Blue.png')
         self.blue_goblin_image = pygame.transform.scale_by(self.blue_goblin_image, .5)
@@ -17,6 +17,8 @@ class goblin_handler():
         self.skull_image = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Factions\\Knights\\Troops\\Dead\\Dead.png')
         self.skull_image = pygame.transform.scale_by(self.skull_image, .5)
         self.skull_image = pygame.transform.flip(self.skull_image, True, False)
+        
+        self.sound_handler = sound_handler
 
         self.elims = 0
 
@@ -53,7 +55,8 @@ class goblin_handler():
         }
     
     def spawn_goblin(self, pos, type):
-        self.goblins.append(goblin(type, self, pos))
+        self.goblins.append(goblin(type, self, pos, self.sound_handler))
+        self.sound_handler.play('goblin spawn')
 
     def frame_check(self, hero_handler):
         for goblin in self.goblins:
@@ -88,5 +91,7 @@ class goblin_handler():
                 if collum_start < gx < collum_end:
                     if goblin.state != 'dead':
                         goblin.take_damage(damage)
+                        if damage > 0:
+                            self.sound_handler.play('hit')
                         return True
         return False

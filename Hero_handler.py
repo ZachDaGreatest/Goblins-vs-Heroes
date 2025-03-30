@@ -5,7 +5,7 @@ from commands import convert_to_game_cords, convert_to_pixel_cords
 # the hero handler is for doing things with every hero
 # Ex: drawing sprites, checking occupied spaces, preforming frame checks
 class hero_handler():
-    def __init__(self):
+    def __init__(self, sound_handler):
         # all images have to be loaded and scaled down by 50%
         self.knight_image = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Factions\\Knights\\Troops\\Warrior\\Blue\\Warrior_Blue.png')
         self.knight_image = pygame.transform.scale_by(self.knight_image, .5)
@@ -21,12 +21,16 @@ class hero_handler():
         # heros is the list of all hero objects
         self.heros = []
 
+        # using the handler prevents overlap of sound attacks between objects
+        self.sound_handler = sound_handler
+
         # this dictionary gives all info for hero types that doesn't change 
         # Ex: health changes depending on the hero so it isn't included, max health is constant across a type so it is included
         self.hero_types = {
             'standard' : {
                 'max_health' : 100,
                 'image' : self.knight_image,
+                'sound' : 'sword',
                 'attack_speed' : 120,
                 'damage' : 80,
                 'range' : 1,
@@ -35,6 +39,7 @@ class hero_handler():
             'pawn' : {
                 'max_health' : 60,
                 'image' : self.pawn_image,
+                'sound' : 'hammer',
                 'attack_speed' : 60,
                 'damage' : 10,
                 'range' : 1,
@@ -43,6 +48,7 @@ class hero_handler():
             'archer' : {
                 'max_health' : 25,
                 'image' : self.archer_image,
+                'sound' : 'bow',
                 'attack_speed' : 120,
                 'damage' : 10,
                 'range' : 10,
@@ -52,7 +58,8 @@ class hero_handler():
 
     # this should be called by the shop
     def make_hero(self, pos, type):
-        self.heros.append(hero(type, self, pos))
+        self.sound_handler.play('hero spawn')
+        self.heros.append(hero(type, self, pos, self.sound_handler))
 
     # the hero.frame_check returns false if they have 0 health or less
     def frame_check(self, goblin_handler):
