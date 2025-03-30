@@ -21,9 +21,6 @@ class hero_handler():
         # heros is the list of all hero objects
         self.heros = []
 
-        # arrowsis a list of all current arrows on screen
-        self.arrows = []
-
         # this dictionary gives all info for hero types that doesn't change 
         # Ex: health changes depending on the hero so it isn't included, max health is constant across a type so it is included
         self.hero_types = {
@@ -31,7 +28,7 @@ class hero_handler():
                 'max_health' : 100,
                 'image' : self.knight_image,
                 'attack_speed' : 120,
-                'damage' : 40,
+                'damage' : 80,
                 'range' : 1,
                 'is ranged' : False
             },
@@ -44,10 +41,10 @@ class hero_handler():
                 'is ranged' : False
             },
             'archer' : {
-                'max_health' : 20,
+                'max_health' : 25,
                 'image' : self.archer_image,
-                'attack_speed' : 60,
-                'damage' : 20,
+                'attack_speed' : 120,
+                'damage' : 10,
                 'range' : 10,
                 'is ranged' : True
             }

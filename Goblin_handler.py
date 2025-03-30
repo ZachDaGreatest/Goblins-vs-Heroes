@@ -5,11 +5,18 @@ from Goblin import goblin
 class goblin_handler():
     def __init__(self):
         # all images have to be loaded and scaled down by 50%, goblins need to be flipped to face the right way
-        self.goblin_image = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Factions\\Goblins\\Troops\\Torch\\Blue\\Torch_Blue.png')
-        self.goblin_image = pygame.transform.scale_by(self.goblin_image, .5)
-        self.goblin_image = pygame.transform.flip(self.goblin_image, True, False)
+        self.blue_goblin_image = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Factions\\Goblins\\Troops\\Torch\\Blue\\Torch_Blue.png')
+        self.blue_goblin_image = pygame.transform.scale_by(self.blue_goblin_image, .5)
+        self.blue_goblin_image = pygame.transform.flip(self.blue_goblin_image, True, False)
+        self.purple_goblin_image = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Factions\\Goblins\\Troops\\Torch\\Purple\\Torch_Purple.png')
+        self.purple_goblin_image = pygame.transform.scale_by(self.purple_goblin_image, .5)
+        self.purple_goblin_image = pygame.transform.flip(self.purple_goblin_image, True, False)
+        self.red_goblin_image = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Factions\\Goblins\\Troops\\Torch\\Red\\Torch_Red.png')
+        self.red_goblin_image = pygame.transform.scale_by(self.red_goblin_image, .5)
+        self.red_goblin_image = pygame.transform.flip(self.red_goblin_image, True, False)
         self.skull_image = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Factions\\Knights\\Troops\\Dead\\Dead.png')
         self.skull_image = pygame.transform.scale_by(self.skull_image, .5)
+        self.skull_image = pygame.transform.flip(self.skull_image, True, False)
 
         self.elims = 0
 
@@ -21,10 +28,26 @@ class goblin_handler():
         self.goblin_types = {
             'standard' : {
                 'max_health' : 40,
-                'image' : self.goblin_image,
+                'image' : self.blue_goblin_image,
                 'attack_speed' : 120,
                 'damage' : 5,
                 'speed' : 1/120,
+                'range' : 1
+            },
+            'fast' : {
+                'max_health' : 10,
+                'image' : self.purple_goblin_image,
+                'attack_speed' : 60,
+                'damage' : 5,
+                'speed' : 1/45,
+                'range' : 1
+            },
+            'heavy' : {
+                'max_health' : 80,
+                'image' : self.red_goblin_image,
+                'attack_speed' : 180,
+                'damage' : 30,
+                'speed' : 1/180,
                 'range' : 1
             }
         }
@@ -47,7 +70,7 @@ class goblin_handler():
                 else:
                     screen.blit(goblin.image, convert_to_pixel_cords(goblin.pos, 1, -16, 0), (672-(96*goblin.fx), 96*goblin.fy, 96, 96))
             else:
-                screen.blit(self.skull_image, (convert_to_pixel_cords(goblin.pos, 1, 0, 16)), (64*goblin.fx, 64*goblin.fy, 64, 64))
+                screen.blit(self.skull_image, (convert_to_pixel_cords(goblin.pos, 1, 0, 16)), (384-64*goblin.fx, 64*goblin.fy, 64, 64))
     
     def attack(self):
         for goblin in self.goblins:

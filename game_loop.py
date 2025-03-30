@@ -14,39 +14,51 @@ enemy_handler = goblin_handler()
 game_clock = pygame.time.Clock()
 
 # make_heros is for testing and randomly puts random hero on each square
-heros = ['pawn', 'standard', 'archer']
+# heros = ['pawn', 'standard', 'archer']
+# def make_heros():
+#     for x in range(7):
+#         for y in range(3):
+#             troop_handler.make_hero((x,y), choice(heros))
 def make_heros():
     for x in range(7):
         for y in range(3):
-            troop_handler.make_hero((x,y), choice(heros))
+            if x < 5:
+                troop_handler.make_hero((x,y), 'archer')
+            else:
+                troop_handler.make_hero((x,y), 'standard')
 
+goblins = ['standard', 'heavy', 'fast']
 def make_goblins():
     for y in range(3):
-        enemy_handler.spawn_goblin((10,y), 'standard')
+        enemy_handler.spawn_goblin((10,y), choice(goblins))
 
 # all screen initiation is temporary and will be moved to main
 # screen is the object that gets drawn on, then it is scaled onto display
 # 360 * 640 is the standard ratio which is 16/9
 # scale factor is used for anything that uses screen units
-HEIGHT = 540
-WIDTH = HEIGHT*16/9
+# getting display info before setup gets monitor screen size which is used for auto fill fullscreen
+WIDTH = pygame.display.Info().current_w
+HEIGHT = WIDTH*9/16
 scale_factor = HEIGHT/360
 display = pygame.display.set_mode((WIDTH, HEIGHT))
 screen = pygame.Surface((640, 360))
 pygame.display.set_caption('Heros vs Goblins')
-# pygame.display.toggle_fullscreen()
+pygame.display.toggle_fullscreen()
 frame = 0
-f_goal = 180
+f_goal = 300
 
-# the while loop is where the game happens
+# the while loop is whaere the game happens
 gamin = True
 while gamin:
     # tick sets the fps, the game is built around 60 fps
     game_clock.tick(60)
+
+    # this is a basic enemy spawn system
+    # TODO move into goblin handler and add seeds
     frame += 1
     if frame % f_goal == 0:
         make_goblins()
-        f_goal = randint(100,180)
+        f_goal = 100
         frame = 0
 
     # event handeler is for all imputs
@@ -68,7 +80,7 @@ while gamin:
             x, y = pygame.mouse.get_pos()
             x, y = convert_to_game_cords((x,y), scale_factor)
             if troop_handler.check_empty((x,y), scale_factor, True):
-                troop_handler.make_hero((x,y), 'archer')
+                troop_handler.make_hero((x,y), 'standard')
             # example of using check empty, prints false if hero is in square/it isn't swapnable
             # animation testing, if you click near a hero they die, otherwise places hero
             # could be an example of the way a shop place function would work
@@ -98,7 +110,7 @@ while gamin:
     enemy_handler.render_goblins(screen)
 
     # this line is for testing frame rate based on object amounts
-    print(f'you have {enemy_handler.elims} elims while there are {len(troop_handler.heros)} knights and {len(enemy_handler.goblins)} goblins running at {game_clock.get_fps()} fps')
+    # print(f'you have {enemy_handler.elims} elims while there are {len(troop_handler.heros)} knights and {len(enemy_handler.goblins)} goblins running at {game_clock.get_fps()} fps')
 
     # the screen that has everything drawn on it is scaled and put on the actual display
     # temp_screen stores the transformed screen without changing the scale of screen
