@@ -18,11 +18,17 @@ class hero():
         self.attack_speed = self.type_info['attack_speed']
         self.damage = self.type_info['damage']
         self.range = self.type_info['range']
+        self.is_ranged = self.type_info['is ranged']
         # sets pos to the fed game cordinates (not based on pixels)
         self.pos = pos
         # sets state and state_frames to the default of 'idle' and 0
         self.state = 'idle'
         self.state_frames = 0
+        # if the hero is ranged they have an arrow position, visibility, and damage
+        if self.is_ranged:
+            self.arrows = []
+            self.arrow_damage = self.damage
+            self.damage = 0
 
     def frame_check(self, goblin_handler):
         # checks to make sure the hero is still alive
@@ -41,8 +47,26 @@ class hero():
         else:
             min_y = 0
             max_y = 0
+        if self.is_ranged and self.state == 'attacking':
+            if self.state_frames == self.attack_speed-36:
+                self.arrows.append(self.pos)
+            if self.state_frames > self.attack_speed-60:
+                max_x = 7
+            else:
+                max_x = 5
+        else:
+            max_x = 5
+        if self.is_ranged:
+            temp_arrows = self.arrows
+            self.arrows = []
+            for arrow in temp_arrows:
+                x, y = arrow
+                x += 1/10
+                if not goblin_handler.check_area(y, x, x+.5, self.arrow_damage):
+                    self.arrows.append((x,y))
+                
         # the frame pos is updated
-        self.fx, self.fy, self.ff, animation_reset = frame_count_check(self.fx, self.fy, self.ff, 0, 5, min_y, max_y)
+        self.fx, self.fy, self.ff, animation_reset = frame_count_check(self.fx, self.fy, self.ff, 0, max_x, min_y, max_y)
         # if the animation reset and the hero is dead it returns false which removes the hero
         if animation_reset == True and self.state == 'dead':
             return False
@@ -58,6 +82,8 @@ class hero():
             self.state = 'attacking'
             self.fx = 0
             self.fy = 2
+            if self.is_ranged:
+                self.fy = 4
             # state_frames is the amount of frames before the hero returns to idle
             self.state_frames = self.attack_speed
 

@@ -11,6 +11,8 @@ class goblin_handler():
         self.skull_image = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Factions\\Knights\\Troops\\Dead\\Dead.png')
         self.skull_image = pygame.transform.scale_by(self.skull_image, .5)
 
+        self.elims = 0
+
         # goblins is the list of all goblin objects
         self.goblins = []
 
@@ -34,6 +36,7 @@ class goblin_handler():
         for goblin in self.goblins:
             if goblin.frame_check(hero_handler) == False:
                 self.goblins.remove(goblin)
+                self.elims += 1
 
     # if the goblin is dead the image is smaller so it needs a different blit command
     def render_goblins(self, screen):

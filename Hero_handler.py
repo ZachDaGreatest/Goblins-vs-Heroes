@@ -13,9 +13,16 @@ class hero_handler():
         self.skull_image = pygame.transform.scale_by(self.skull_image, .5)
         self.pawn_image = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Factions\\Knights\\Troops\\Pawn\\Blue\\Pawn_Blue.png')
         self.pawn_image = pygame.transform.scale_by(self.pawn_image, .5)
+        self.archer_image = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Factions\\Knights\\Troops\\Archer\\Blue\\Archer_Blue.png')
+        self.archer_image = pygame.transform.scale_by(self.archer_image, .5)
+        self.arrow_image = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Factions\\Knights\\Troops\\Archer\\Arrow\\Arrow.png')
+        self.arrow_image = pygame.transform.scale_by(self.arrow_image, .5)
 
         # heros is the list of all hero objects
         self.heros = []
+
+        # arrowsis a list of all current arrows on screen
+        self.arrows = []
 
         # this dictionary gives all info for hero types that doesn't change 
         # Ex: health changes depending on the hero so it isn't included, max health is constant across a type so it is included
@@ -25,14 +32,24 @@ class hero_handler():
                 'image' : self.knight_image,
                 'attack_speed' : 120,
                 'damage' : 40,
-                'range' : 1
+                'range' : 1,
+                'is ranged' : False
             },
             'pawn' : {
                 'max_health' : 60,
                 'image' : self.pawn_image,
                 'attack_speed' : 60,
                 'damage' : 10,
-                'range' : 1
+                'range' : 1,
+                'is ranged' : False
+            },
+            'archer' : {
+                'max_health' : 20,
+                'image' : self.archer_image,
+                'attack_speed' : 60,
+                'damage' : 20,
+                'range' : 10,
+                'is ranged' : True
             }
         }
 
@@ -51,9 +68,12 @@ class hero_handler():
         for hero in self.heros:
             if hero.state != 'dead':
                 screen.blit(hero.image, convert_to_pixel_cords(hero.pos, 1, -16, 0), (96*hero.fx, 96*hero.fy, 96, 96))
-            else:
-                screen.blit(self.skull_image, (convert_to_pixel_cords(hero.pos, 1, 0, 16)), (64*hero.fx, 64*hero.fy, 64, 64))
+                if hero.is_ranged:
+                    for arrow in hero.arrows:
+                        screen.blit(self.arrow_image, convert_to_pixel_cords(arrow, 1, 16, 36), (0, 0, 32, 32))
 
+            else:
+                screen.blit(self.skull_image, convert_to_pixel_cords(hero.pos, 1, 0, 16), (64*hero.fx, 64*hero.fy, 64, 64))
     # this command is for debugging
     def attack(self):
          for hero in self.heros:
