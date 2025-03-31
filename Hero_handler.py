@@ -9,8 +9,16 @@ class hero_handler():
         # all images have to be loaded and scaled down by 50%
         self.knight_image = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Factions\\Knights\\Troops\\Warrior\\Blue\\Warrior_Blue.png')
         self.knight_image = pygame.transform.scale_by(self.knight_image, .5)
+
+        self.archer_image = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Factions\\Knights\\Troops\\Archer\\Archer + Bow\Archer_Blue_(NoArms).png')
+        self.archer_image = pygame.transform.scale_by(self.archer_image, .5)
+        
+        self.archer_bow = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Factions\\Knights\\Troops\\Archer\\Archer + Bow\\Archer_Bow_Blue.png')
+        self.archer_bow = pygame.transform.scale_by(self.archer_bow, .5)
+
         self.skull_image = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Factions\\Knights\\Troops\\Dead\\Dead.png')
         self.skull_image = pygame.transform.scale_by(self.skull_image, .5)
+
         self.pawn_image = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Factions\\Knights\\Troops\\Pawn\\Blue\\Pawn_Blue.png')
         self.pawn_image = pygame.transform.scale_by(self.pawn_image, .5)
         self.archer_image = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Factions\\Knights\\Troops\\Archer\\Blue\\Archer_Blue.png')
@@ -54,6 +62,27 @@ class hero_handler():
                 'range' : 10,
                 'is ranged' : True
             }
+                'damage' : 10,
+                'cost' : 15
+            },
+
+            'archer' : {
+                'max_health' : 25,
+                'image' : self.archer_image,
+                'bow': self.archer_bow,
+                'attack_speed' : 120,
+                'damage' : 20,
+                'cost': 25
+            }, 
+
+            'pawn' : {
+                'max_health' : 50,
+                'image' : self.pawn_image,
+                'attack_speed' : 120,
+                'damage' : 5,
+                'cost': 10
+            }
+
         }
 
     # this should be called by the shop

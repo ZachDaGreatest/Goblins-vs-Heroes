@@ -5,6 +5,9 @@ from Goblin_handler import goblin_handler
 from Sound_handler import sound_handler
 from random import randint, choice
 
+from random import randint
+from gui import render_gui, check_gui_click
+from decorations import render_subtile_map, render_fore_decorations
 # this file will eventually be turned into a funtion for the menu to call
 
 # FIXME there are random stuters, 
@@ -53,21 +56,12 @@ def make_goblins():
 # screen is the object that gets drawn on, then it is scaled onto display
 # 360 * 640 is the standard ratio which is 16/9
 # scale factor is used for anything that uses screen units
-# getting display info before setup gets monitor screen size which is used for auto fill fullscreen
-WIDTH = pygame.display.Info().current_w
-HEIGHT = WIDTH*9/16
+HEIGHT = 360
+WIDTH = HEIGHT*16/9
 scale_factor = HEIGHT/360
 display = pygame.display.set_mode((WIDTH, HEIGHT))
 screen = pygame.Surface((640, 360))
 pygame.display.set_caption('Heros vs Goblins')
-pygame.display.toggle_fullscreen()
-frame = 0
-f_goal = 60
-iteration = 0
-
-top_row = row_spawns()
-middle_row = row_spawns()
-bottom_row = row_spawns()
 
 # the while loop is whaere the game happens
 gamin = True
@@ -121,17 +115,13 @@ while gamin:
             # example of using check empty, prints false if hero is in square/it isn't swapnable
             # animation testing, if you click near a hero they die, otherwise places hero
             # could be an example of the way a shop place function would work
-            elif not troop_handler.check_empty(pygame.mouse.get_pos(), scale_factor, False):
-                for hero in troop_handler.heros:
-                    if hero.pos == (x,y):
+            if troop_handeler.check_empty(pygame.mouse.get_pos(), scale_factor):
+                troop_handeler.make_hero(convert_to_game_cords((x,y), scale_factor), 'standard')
+            else:
+                for hero in troop_handeler.heros:
+                    if hero.pos == convert_to_game_cords((x,y), scale_factor):
                         hero.attack()
                         hero.take_damage(100)
-            for goblin in enemy_handler.goblins:
-                x, y = pygame.mouse.get_pos()
-                gx, gy = convert_to_pixel_cords(goblin.pos, scale_factor, 32, 48)
-                if x-24 < gx < x+24 and y-24 < gy < y+24:
-                    goblin.take_damage(40)
-            
         # clicking the x stops the game
         if event.type == pygame.QUIT:
             gamin = False
@@ -142,10 +132,9 @@ while gamin:
 
     # the screen is drawn over with a solid color and then all objects are drawn on
     screen.fill((0,255,255))
+    render_subtile_map(screen)
     render_forground(screen)
-    screen.blit(gold_mine, (0, 88))
-    troop_handler.render_heros(screen)
-    enemy_handler.render_goblins(screen)
+    troop_handeler.render_heros(screen)
 
     # this line is for testing frame rate based on object amounts
     info = f'{enemy_handler.elims} elims : {len(troop_handler.heros)} knights and {len(enemy_handler.goblins)} goblins : {round(game_clock.get_fps(), 8)} fps'
