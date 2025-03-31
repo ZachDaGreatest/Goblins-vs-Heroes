@@ -8,12 +8,19 @@ bridge = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Terrain\\Brid
 
 # 10 * 5.625 64 pixel squares
 # the tile map shows the program where to draw everything and is inverted both horizontaly and verticaly
+# tile_map = [
+#     [1, 1, 1, 2, 2, 2, 2, 2, 2, 2],
+#     [1, 1, 1, 2, 2, 2, 2, 2, 2, 2],
+#     [1, 1, 1, 2, 2, 2, 2, 2, 2, 2],
+#     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 0, 3, 3, 3, 3]
+# ]
 tile_map = [
     [1, 1, 1, 2, 2, 2, 2, 2, 2, 2],
     [1, 1, 1, 2, 2, 2, 2, 2, 2, 2],
     [1, 1, 1, 2, 2, 2, 2, 2, 2, 2],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 3, 3, 3, 3]
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
 
 # go through bit map and blit images to screen

@@ -2,7 +2,8 @@ import pygame
 from commands import render_forground, convert_to_game_cords
 from Hero_handler import hero_handler
 from random import randint
-
+from gui import render_gui, check_gui_click
+from decorations import render_subtile_map, render_fore_decorations
 # this file will eventually be turned into a funtion for the menu to call
 
 # all functions/classes are initiated
@@ -22,12 +23,14 @@ def make_knights():
 # screen is the object that gets drawn on, then it is scaled onto display
 # 360 * 640 is the standard ratio which is 16/9
 # scale factor is used for anything that uses screen units
+
 HEIGHT = 360
 WIDTH = HEIGHT*16/9
 scale_factor = HEIGHT/360
 display = pygame.display.set_mode((WIDTH, HEIGHT))
 screen = pygame.Surface((640, 360))
 pygame.display.set_caption('Heros vs Goblins')
+selected_troop = "none"
 
 # the while loop is where the game happens
 gamin = True
@@ -51,13 +54,15 @@ while gamin:
             # example of using check empty, prints false if hero is in square/it isn't swapnable
             # animation testing, if you click near a hero they die, otherwise places hero
             # could be an example of the way a shop place function would work
-            if troop_handeler.check_empty(pygame.mouse.get_pos(), scale_factor):
-                troop_handeler.make_hero(convert_to_game_cords((x,y), scale_factor), 'standard')
+            if troop_handeler.check_empty(pygame.mouse.get_pos(), scale_factor) and selected_troop != "none":
+                troop_handeler.make_hero(convert_to_game_cords((x,y), scale_factor), selected_troop)
             else:
                 for hero in troop_handeler.heros:
                     if hero.pos == convert_to_game_cords((x,y), scale_factor):
                         hero.attack()
                         hero.take_damage(100)
+            #check to see if the ui was clicked 
+            selected_troop = check_gui_click(x,y)
         # clicking the x stops the game
         if event.type == pygame.QUIT:
             gamin = False
@@ -67,8 +72,13 @@ while gamin:
 
     # the screen is drawn over with a solid color and then all objects are drawn on
     screen.fill((0,255,255))
+    render_subtile_map(screen)
     render_forground(screen)
+    render_fore_decorations(screen)
     troop_handeler.render_heros(screen)
+    render_gui(screen,pygame.mouse.get_pos())
+
+    
 
     # this line is for testing frame rate based on hero amounts
     # print(game_clock.get_fps(), len(troop_handeler.heros))
