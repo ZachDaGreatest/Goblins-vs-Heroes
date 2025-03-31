@@ -53,7 +53,7 @@ class hero():
             min_y = 0
             max_y = 0
         if self.is_ranged and self.state == 'attacking':
-            if self.state_frames == self.attack_speed-36:
+            if self.state_frames == self.attack_speed-32:
                 self.arrows.append(self.pos)
                 self.sound_handler.play(self.sound)
             if self.state_frames > self.attack_speed-60:
@@ -73,7 +73,7 @@ class hero():
             for arrow in temp_arrows:
                 x, y = arrow
                 x += 1/10
-                if not goblin_handler.check_area(y, x, x+.5, self.arrow_damage):
+                if not goblin_handler.check_area(y, x, x+.5, self.arrow_damage) and x < 11:
                     self.arrows.append((x,y))
                 
         # the frame pos is updated

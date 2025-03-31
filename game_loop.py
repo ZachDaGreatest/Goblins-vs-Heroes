@@ -1,18 +1,5 @@
-'''
-metal hit whoosh https://mixkit.co/free-sound-effects/sword/ is sword sound
-hammer hit on wood https://mixkit.co/free-sound-effects/discover/hammer/ is hammer sound
-Arrow shot through air https://mixkit.co/free-sound-effects/medieval-battle/ is bow sound
-Impact of a blow https://mixkit.co/free-sound-effects/hit/ is hit sound
-spawn sound is https://pixabay.com/sound-effects/thud-sound-effect-319090/ 
-lego death is https://tuna.voicemod.net/sound/9a9a1207-9d4d-49a6-92c1-4827fe1e9506
-scream death is https://tuna.voicemod.net/sound/776f023d-1bb4-4365-a5ea-f6e0069695f8
-roblox death is https://tuna.voicemod.net/sound/0c1898d8-28fa-4796-8b52-7cc0a9b9b3c8
-troop spawn is https://tuna.voicemod.net/sound/f6ebeb9f-b314-4dc5-872b-9d0a77b38525 
-'''
-
-
 import pygame
-from commands import render_forground, convert_to_game_cords, convert_to_pixel_cords
+from commands import render_forground, convert_to_game_cords, convert_to_pixel_cords, row_spawns
 from Hero_handler import hero_handler
 from Goblin_handler import goblin_handler
 from Sound_handler import sound_handler
@@ -20,24 +7,35 @@ from random import randint, choice
 
 # this file will eventually be turned into a funtion for the menu to call
 
+# FIXME there are random stuters, 
+'''
+I have individualy commented out every line in the program and it still happens
+if event handler is commented out the program crashes when there would be a lag spike
+the old code runs fine
+seems like it is caused by poor optomization since it only occurs when on battery and not when plugged in
+'''
+
+# TODO include the seed here at the top with random.seed()
+
 # all functions/classes are initiated
 pygame.init()
 pygame.font.init()
+font = pygame.font.Font('slkscr.ttf', 18)
 pygame.mixer.init()
 sound_manager = sound_handler()
 troop_handler = hero_handler(sound_manager)
 enemy_handler = goblin_handler(sound_manager)
 game_clock = pygame.time.Clock()
-pygame.mixer.music.load('fear music.mp3')
-pygame.mixer.music.set_volume(.5)
+pygame.mixer.music.load('music\\fear.mp3')
+pygame.mixer.music.set_volume(.8)
 pygame.mixer.music.play()
 
-# make_heros is for testing and randomly puts random hero on each square
-# heros = ['pawn', 'standard', 'archer']
-# def make_heros():
-#     for x in range(7):
-#         for y in range(3):
-#             troop_handler.make_hero((x,y), choice(heros))
+
+gold_mine_inactive = pygame.image.load('Tiny Swords\Tiny Swords (Update 010)\Resources\Gold Mine\GoldMine_Inactive.png')
+gold_mine_active = pygame.image.load('Tiny Swords\Tiny Swords (Update 010)\Resources\Gold Mine\GoldMine_Active.png')
+gold_mine = gold_mine_inactive
+
+
 def make_heros():
     for x in range(7):
         for y in range(3):
@@ -64,21 +62,41 @@ screen = pygame.Surface((640, 360))
 pygame.display.set_caption('Heros vs Goblins')
 pygame.display.toggle_fullscreen()
 frame = 0
-f_goal = 300
+f_goal = 60
+iteration = 0
+
+top_row = row_spawns()
+middle_row = row_spawns()
+bottom_row = row_spawns()
 
 # the while loop is whaere the game happens
 gamin = True
 while gamin:
+    # if the music isn't playing it is started again
+    if not pygame.mixer.music.get_busy():
+        pygame.mixer.music.play()
     # tick sets the fps, the game is built around 60 fps
     game_clock.tick(60)
-
+    
     # this is a basic enemy spawn system
     # TODO move into goblin handler and add seeds
     frame += 1
-    if frame % f_goal == 0:
-        make_goblins()
-        f_goal = 100
-        frame = 0
+    if frame % f_goal == 0 and iteration < 180:
+        # make_goblins()
+        goblin_type = top_row[iteration]
+        if goblin_type != False:
+            enemy_handler.spawn_goblin((10,0), goblin_type)
+        goblin_type = middle_row[iteration]
+        if goblin_type != False:
+            enemy_handler.spawn_goblin((10,1), goblin_type)
+        goblin_type = bottom_row[iteration]
+        if goblin_type != False:
+            enemy_handler.spawn_goblin((10,2), goblin_type)
+        iteration += 1
+
+    # use this section for economy code
+    if iteration > 20:
+        gold_mine = gold_mine_active
 
     # event handeler is for all imputs
     for event in pygame.event.get():
@@ -99,7 +117,7 @@ while gamin:
             x, y = pygame.mouse.get_pos()
             x, y = convert_to_game_cords((x,y), scale_factor)
             if troop_handler.check_empty((x,y), scale_factor, True):
-                troop_handler.make_hero((x,y), 'standard')
+                troop_handler.make_hero((x,y), 'pawn')
             # example of using check empty, prints false if hero is in square/it isn't swapnable
             # animation testing, if you click near a hero they die, otherwise places hero
             # could be an example of the way a shop place function would work
@@ -125,11 +143,17 @@ while gamin:
     # the screen is drawn over with a solid color and then all objects are drawn on
     screen.fill((0,255,255))
     render_forground(screen)
+    screen.blit(gold_mine, (0, 88))
     troop_handler.render_heros(screen)
     enemy_handler.render_goblins(screen)
 
     # this line is for testing frame rate based on object amounts
-    # print(f'you have {enemy_handler.elims} elims while there are {len(troop_handler.heros)} knights and {len(enemy_handler.goblins)} goblins running at {game_clock.get_fps()} fps')
+    info = f'{enemy_handler.elims} elims : {len(troop_handler.heros)} knights and {len(enemy_handler.goblins)} goblins : {round(game_clock.get_fps(), 8)} fps'
+    stats = font.render(info, False, (255,0,0))
+    screen.blit(stats, (0,0))
+    
+    s = font.render(str(iteration), False, (0,0,0))
+    screen.blit(s, (0,20))
 
     # the screen that has everything drawn on it is scaled and put on the actual display
     # temp_screen stores the transformed screen without changing the scale of screen

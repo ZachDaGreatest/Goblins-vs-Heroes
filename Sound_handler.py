@@ -5,14 +5,14 @@ from random import choice
 class sound_handler():
     def __init__(self):
         self.sound_effects = {
-            'sword' : pygame.mixer.Sound('sword sound.wav'),
-            'hammer' : pygame.mixer.Sound('hammer sound.wav'),
-            'bow' : pygame.mixer.Sound('bow sound.wav'),
-            'hit' : pygame.mixer.Sound('hit sound.wav'),
-            'goblin spawn' : pygame.mixer.Sound('spawn sound.mp3'),
-            'hero spawn' : pygame.mixer.Sound('troop spawn.mp3'),
-            'death' : [pygame.mixer.Sound('lego death.mp3'), pygame.mixer.Sound('roblox death.mp3'), pygame.mixer.Sound('scream death.mp3')],
-            'torch' : pygame.mixer.Sound('whip.wav')
+            'sword' : pygame.mixer.Sound('sound fx\\sword sound.wav'),
+            'hammer' : pygame.mixer.Sound('sound fx\\hammer sound.wav'),
+            'bow' : pygame.mixer.Sound('sound fx\\bow sound.wav'),
+            'hit' : pygame.mixer.Sound('sound fx\\hit sound.wav'),
+            'goblin spawn' : pygame.mixer.Sound('sound fx\\spawn sound.mp3'),
+            'hero spawn' : pygame.mixer.Sound('sound fx\\troop spawn.mp3'),
+            'death' : [pygame.mixer.Sound('sound fx\\lego death.mp3'), pygame.mixer.Sound('sound fx\\roblox death.mp3'), pygame.mixer.Sound('sound fx\\scream death.mp3')],
+            'torch' : pygame.mixer.Sound('sound fx\\whip.wav')
         }
 
         self.sword_available = True

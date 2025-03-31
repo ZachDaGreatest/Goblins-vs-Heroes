@@ -1,4 +1,5 @@
 import pygame
+from random import randint
 
 # all of the sprites are loaded in while the banner is resized to fit the screen
 grass = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Terrain\\Ground\\Tilemap_Flat.png')
@@ -12,7 +13,7 @@ tile_map = [
     [1, 1, 1, 2, 2, 2, 2, 2, 2, 2],
     [1, 1, 1, 2, 2, 2, 2, 2, 2, 2],
     [1, 1, 1, 2, 2, 2, 2, 2, 2, 2],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 5],
     [0, 0, 0, 0, 0, 0, 3, 3, 3, 3]
 ]
 
@@ -41,8 +42,8 @@ def render_forground(screen):
                 else:
                     screen.blit(bridge, (640-64*collum_num, 360-64*row_num), (64, 0, 64, 64))
             # 3 is a place holder for the shop ui
-            if collum == 3:
-                screen.blit(banner, (640-64*collum_num, 328-64*row_num), (0, 0, 64, 64))
+            # if collum == 3:
+            #     screen.blit(banner, (640-64*collum_num, 328-64*row_num), (0, 0, 64, 64))
 
 # this iterating through the images of an animation where all sprites are on one png
 def frame_count_check(fx, fy, ff, fx_min, fx_max, fy_min, fy_max):
@@ -78,3 +79,44 @@ def convert_to_pixel_cords(pos, scale_factor, x_offset, y_offset):
     new_x = int(x*64*scale_factor)+x_offset
     new_y = int((150+y*64)*scale_factor)+y_offset
     return (new_x, new_y)
+
+
+# gen algorithm for a row
+def row_spawns():
+    spawns = []
+    for spawn in range(180):
+        if spawn < 20:
+            num = randint(0,40)
+            if num == 40:
+                spawns.append('standard')
+            else:
+                spawns.append(False)
+        elif spawn < 60:
+            num = randint(0,20)
+            if num >= 19:
+                spawns.append('standard')
+            elif num == 18:
+                spawns.append('fast')
+            else:
+                spawns.append(False)
+        elif spawn < 120:
+            num = randint(0,10)
+            if num >= 9:
+                spawns.append('standard')
+            elif num == 8:
+                spawns.append('fast')
+            elif num == 7:
+                spawns.append('heavy')
+            else:
+                spawns.append(False)
+        elif spawn <= 180:
+            num = randint(0,10)
+            if num >= 9:
+                spawns.append('standard')
+            elif num >= 7:
+                spawns.append('fast')
+            elif num >= 5:
+                spawns.append('heavy')
+            else:
+                spawns.append(False)
+    return spawns
