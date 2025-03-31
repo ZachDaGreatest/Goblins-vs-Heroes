@@ -1,6 +1,7 @@
 import pygame
 import math
 from Hero_handler import hero_handler
+from Sound_handler import sound_handler
 
 button = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\UI\\Buttons\\Button_Blue_9Slides.png')
 button = pygame.transform.scale(button, (64,64))
@@ -40,7 +41,7 @@ item_yoffset = 16
 selected = [False,0]
 
 
-troop_data = hero_handler()
+troop_data = hero_handler(sound_handler)
 last_selected_troop = "none"
 items = []
 for troop in troop_data.hero_types.keys():
@@ -89,7 +90,6 @@ def render_icon(state,screen, posx, posy, index):
         elif items[index] == "archer":
             #draw in the archer and its bow 
             screen.blit(troop_data.hero_types["archer"]["image"], (posx-item_xoffset,posy-item_yoffset), (0,0,96,96)) #need only one sprite img
-            screen.blit(troop_data.hero_types["archer"]["bow"], (posx-item_xoffset,posy-item_yoffset), (0,0,96,96)) #need only one sprite img
         
         #if its selected or hovered over; draw in the troop's stats 
         
@@ -124,15 +124,15 @@ def render_icon(state,screen, posx, posy, index):
         return last_selected_troop
         
 
-def check_gui_click(x,y): # if the click was on one of button, make that button slected
+def check_gui_click(x,y,sf): # if the click was on one of button, make that button slected
     global selected
     global last_selected_troop
     try:
         for icon_num in range(0, int(math.floor(640/64))):#generate howevere many boxes can fit on the screen
             #check if mouse pos is within a 64 pixel range of this pos so we know it was clicked
-            xdiff = x - icon_num*64
+            xdiff = x - icon_num*64*sf
 
-            if 0<= xdiff <64 and y <64:
+            if 0<= xdiff <64*sf and y <64*sf:
                 #we clicked this icon
                 selected = [True, icon_num]
                 last_selected_troop = items[icon_num]
@@ -158,17 +158,17 @@ def check_gui_click(x,y): # if the click was on one of button, make that button 
 #     screen.blit(text, (64,0))
 
 
-def render_gui(screen, cursor_pos):#640 by 328 screen
+def render_gui(screen, cursor_pos, sf):#640 by 328 screen
     
-    for icon_num in range(0, int(math.floor(640/64))):#generate howevere many boxes can fit on the screen
+    for icon_num in range(len(troop_data.hero_types)):#generate howevere many boxes can fit on the screen
         #check if mouse pos is within a 64 pixel range of this pos so we know it is being hovered over 
-        xdiff = cursor_pos[0] - icon_num*64
+        xdiff = cursor_pos[0] - icon_num*64*sf
 
         if (selected[0] == True) and (selected[1] == icon_num):
 
             render_icon("selected", screen, icon_num*64, 0, icon_num) #this one is selected so flag as selcted and render
 
-        elif 0<=xdiff<64 and cursor_pos[1]<64:
+        elif 0<=xdiff<64*sf and cursor_pos[1]<64*sf:
     
             render_icon("hover", screen, icon_num*64, 0, icon_num)  #we are hovering over this icon so flag it as hovered 
         else:    

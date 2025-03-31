@@ -42,7 +42,8 @@ class hero_handler():
                 'attack_speed' : 120,
                 'damage' : 80,
                 'range' : 1,
-                'is ranged' : False
+                'is ranged' : False,
+                'cost' : 20
             },
             'pawn' : {
                 'max_health' : 60,
@@ -51,7 +52,8 @@ class hero_handler():
                 'attack_speed' : 60,
                 'damage' : 10,
                 'range' : 1,
-                'is ranged' : False
+                'is ranged' : False,
+                'cost': 10
             },
             'archer' : {
                 'max_health' : 25,
@@ -60,29 +62,9 @@ class hero_handler():
                 'attack_speed' : 120,
                 'damage' : 10,
                 'range' : 10,
-                'is ranged' : True
+                'is ranged' : True,
+                'cost' : 25
             }
-                'damage' : 10,
-                'cost' : 15
-            },
-
-            'archer' : {
-                'max_health' : 25,
-                'image' : self.archer_image,
-                'bow': self.archer_bow,
-                'attack_speed' : 120,
-                'damage' : 20,
-                'cost': 25
-            }, 
-
-            'pawn' : {
-                'max_health' : 50,
-                'image' : self.pawn_image,
-                'attack_speed' : 120,
-                'damage' : 5,
-                'cost': 10
-            }
-
         }
 
     # this should be called by the shop

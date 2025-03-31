@@ -4,8 +4,6 @@ from Hero_handler import hero_handler
 from Goblin_handler import goblin_handler
 from Sound_handler import sound_handler
 from random import randint, choice
-
-from random import randint
 from gui import render_gui, check_gui_click
 from decorations import render_subtile_map, render_fore_decorations
 # this file will eventually be turned into a funtion for the menu to call
@@ -29,7 +27,7 @@ sound_manager = sound_handler()
 troop_handler = hero_handler(sound_manager)
 enemy_handler = goblin_handler(sound_manager)
 game_clock = pygame.time.Clock()
-pygame.mixer.music.load('music\\fear.mp3')
+pygame.mixer.music.load('music\\runescape attack 6.mp3')
 pygame.mixer.music.set_volume(.8)
 pygame.mixer.music.play()
 
@@ -56,12 +54,20 @@ def make_goblins():
 # screen is the object that gets drawn on, then it is scaled onto display
 # 360 * 640 is the standard ratio which is 16/9
 # scale factor is used for anything that uses screen units
-HEIGHT = 360
-WIDTH = HEIGHT*16/9
+WIDTH = pygame.display.Info().current_w
+HEIGHT = WIDTH*9/16
 scale_factor = HEIGHT/360
 display = pygame.display.set_mode((WIDTH, HEIGHT))
 screen = pygame.Surface((640, 360))
-pygame.display.set_caption('Heros vs Goblins')
+pygame.display.set_caption('Goblins vs Heroes')
+pygame.display.toggle_fullscreen()
+frame = 0
+f_goal = 60
+iteration = 0
+
+top_row = row_spawns()
+middle_row = row_spawns()
+bottom_row = row_spawns()
 
 # the while loop is whaere the game happens
 gamin = True
@@ -109,19 +115,17 @@ while gamin:
                 enemy_handler.attack()
         if event.type == pygame.MOUSEBUTTONDOWN:
             x, y = pygame.mouse.get_pos()
-            x, y = convert_to_game_cords((x,y), scale_factor)
-            if troop_handler.check_empty((x,y), scale_factor, True):
-                troop_handler.make_hero((x,y), 'pawn')
             # example of using check empty, prints false if hero is in square/it isn't swapnable
             # animation testing, if you click near a hero they die, otherwise places hero
             # could be an example of the way a shop place function would work
-            if troop_handeler.check_empty(pygame.mouse.get_pos(), scale_factor):
-                troop_handeler.make_hero(convert_to_game_cords((x,y), scale_factor), 'standard')
+            if troop_handler.check_empty(pygame.mouse.get_pos(), scale_factor, False):
+                troop_handler.make_hero(convert_to_game_cords((x,y), scale_factor), selected_troop)
             else:
-                for hero in troop_handeler.heros:
+                for hero in troop_handler.heros:
                     if hero.pos == convert_to_game_cords((x,y), scale_factor):
-                        hero.attack()
                         hero.take_damage(100)
+            x, y = pygame.mouse.get_pos()
+            selected_troop = check_gui_click(x, y, scale_factor)
         # clicking the x stops the game
         if event.type == pygame.QUIT:
             gamin = False
@@ -134,15 +138,18 @@ while gamin:
     screen.fill((0,255,255))
     render_subtile_map(screen)
     render_forground(screen)
-    troop_handeler.render_heros(screen)
+    render_gui(screen, pygame.mouse.get_pos(), scale_factor)
+    troop_handler.render_heros(screen)
+    enemy_handler.render_goblins(screen)
+    
 
     # this line is for testing frame rate based on object amounts
-    info = f'{enemy_handler.elims} elims : {len(troop_handler.heros)} knights and {len(enemy_handler.goblins)} goblins : {round(game_clock.get_fps(), 8)} fps'
-    stats = font.render(info, False, (255,0,0))
-    screen.blit(stats, (0,0))
+    # info = f'{enemy_handler.elims} elims : {len(troop_handler.heros)} knights and {len(enemy_handler.goblins)} goblins : {round(game_clock.get_fps(), 8)} fps'
+    # stats = font.render(info, False, (255,0,0))
+    # screen.blit(stats, (0,132))
     
-    s = font.render(str(iteration), False, (0,0,0))
-    screen.blit(s, (0,20))
+    # s = font.render(str(iteration), False, (0,0,0))
+    # screen.blit(s, (0,152))
 
     # the screen that has everything drawn on it is scaled and put on the actual display
     # temp_screen stores the transformed screen without changing the scale of screen
