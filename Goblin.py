@@ -73,9 +73,6 @@ class goblin():
         if self.state != 'idle' and self.state_frames <= 0 and self.state != 'dead':
             self.state = 'idle'
             self.fy = 1
-        if self.pos[0] < -1:
-            self.state = 'dead'
-            # TODO make it so this damages the player
         # if the goblin didn't just finish the dead animation it will return true keeping the goblin around
         return True
     

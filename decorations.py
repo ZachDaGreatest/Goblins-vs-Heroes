@@ -37,18 +37,18 @@ sub_tile_dic = {
 
 }
 
-fps_index = 0 #the frame we are on will count the time till we do all frames of animations for items and then reset to 0
+fps_index = 0 # the frame we are on will count the time till we do all frames of animations for items and then reset to 0
 frame_index = 0
 
-sub_tile_map = [ #1 =foam, 3 = big water rock, 2 = med water rock, 4= small water rock
-    [0, 4, 0, 0, 4, 0 ,0 ,0 ,0 ,0],
-    [0, 0, 2, 0, 2, 0 ,3 ,0 ,0 ,0],
-    [0, 0, 0, 0, 0, 0 ,0 ,1 ,0 ,0],
-    [0, 0, 0, 0, 0, 0 ,0 ,1 ,0 ,0],
-    [0, 0, 0, 0, 0, 0 ,0 ,1 ,0 ,0],
+sub_tile_map = [ #1 = foam, 3 = big water rock, 2 = med water rock, 4 = small water rock
+    [0, 4, 0, 0, 4, 0, 0, 0, 0, 0],
+    [0, 0, 2, 0, 2, 0, 3, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
 ]
 
-top_tile_map = [ #1 =grass, 2 = bush, 3= tree, 4 = small mushroom, 5 = small rock, 6 = bone, 7 = pumpkin
+top_tile_map = [ #1 = grass, 2 = bush, 3 = tree, 4 = small mushroom, 5 = small rock, 6 = bone, 7 = pumpkin
      #first list gives position for drawing, going from left to right, down to up
     [[0,1],[4]], 
     [[2,0],[5]],

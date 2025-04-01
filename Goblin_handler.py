@@ -1,5 +1,5 @@
 import pygame
-from commands import convert_to_pixel_cords
+from commands import convert_to_pixel_cords, row_spawns
 from Goblin import goblin
 
 class goblin_handler():
@@ -21,6 +21,8 @@ class goblin_handler():
         self.sound_handler = sound_handler
 
         self.elims = 0
+        self.iteration = 0
+        self.frame = 0
 
         # goblins is the list of all goblin objects
         self.goblins = []
@@ -95,3 +97,23 @@ class goblin_handler():
                             self.sound_handler.play('hit')
                         return True
         return False
+    
+    def spawn_algorithm(self):
+        self.top_row = row_spawns()
+        self.middle_row = row_spawns()
+        self.bottom_row = row_spawns()
+
+    def spawn_check(self):
+        self.frame += 1
+        if self.frame % 60 == 0 and self.iteration < 180:
+            # make_goblins()
+            goblin_type = self.top_row[self.iteration]
+            if goblin_type != False:
+                self.spawn_goblin((10,0), goblin_type)
+            goblin_type = self.middle_row[self.iteration]
+            if goblin_type != False:
+                self.spawn_goblin((10,1), goblin_type)
+            goblin_type = self.bottom_row[self.iteration]
+            if goblin_type != False:
+                self.spawn_goblin((10,2), goblin_type)
+            self.iteration += 1
