@@ -1,4 +1,5 @@
 import pygame
+from random import choice
 
 class player_functions():
     def __init__(self, goblin_handler, hero_handler, game_clock):
@@ -46,6 +47,21 @@ class player_functions():
             stat = font.render(item, False, (255,0,0))
             screen.blit(stat, (640-200, 20*num))
     
+    def make_heros(self):
+        for x in range(7):
+            for y in range(3):
+                if x < 5:
+                    self.hero_handler.make_hero((x,y), 'archer')
+                elif x == 5:
+                    self.hero_handler.make_hero((x,y), 'standard')
+                else:
+                    self.hero_handler.make_hero((x,y), 'pawn')
+
+    def make_goblins(self):
+        goblins = ['standard', 'heavy', 'fast']
+        for y in range(3):
+            self.goblin_handler.spawn_goblin((10,y), choice(goblins))
+
     def health_check(self):
         for goblin in self.goblin_handler.goblins:
             if goblin.pos[0] < -1:

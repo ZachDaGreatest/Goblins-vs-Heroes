@@ -56,7 +56,7 @@ class hero_handler():
                 'cost': 10
             },
             'archer' : {
-                'max_health' : 25,
+                'max_health' : 10,
                 'image' : self.archer_image,
                 'sound' : 'bow',
                 'attack_speed' : 120,

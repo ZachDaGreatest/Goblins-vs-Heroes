@@ -1,5 +1,5 @@
 import pygame
-from commands import render_forground, convert_to_game_cords, convert_to_pixel_cords
+from commands import render_forground, convert_to_game_cords
 from Hero_handler import hero_handler
 from Goblin_handler import goblin_handler
 from Sound_handler import sound_handler
@@ -34,19 +34,6 @@ pygame.mixer.music.load('music\\tavern brawl.mp3')
 pygame.mixer.music.set_volume(.8)
 pygame.mixer.music.play()
 lost_image = pygame.image.load('skull emoji.gif')
-
-def make_heros():
-    for x in range(7):
-        for y in range(3):
-            if x < 5:
-                troop_handler.make_hero((x,y), 'archer')
-            else:
-                troop_handler.make_hero((x,y), 'standard')
-
-goblins = ['standard', 'heavy', 'fast']
-def make_goblins():
-    for y in range(3):
-        enemy_handler.spawn_goblin((10,y), choice(goblins))
 
 # all screen initiation is temporary and will be moved to main
 # screen is the object that gets drawn on, then it is scaled onto display
@@ -89,15 +76,18 @@ while gamin:
                 gamin = False
             # using v to spawn knights and space to make them attack is used for debugging
             if event.key == pygame.K_v:
-                make_heros()
+                player.make_heros()
                 # using b to spawn goblins and space to make them attack is used for debugging
             if event.key == pygame.K_b:
-                make_goblins()
+                player.make_goblins()
             if event.key == pygame.K_h:
                 player.health -= 1
-            if event.key == pygame.K_SPACE:
-                troop_handler.attack()
-                enemy_handler.attack()
+            if event.key == pygame.K_r:
+                troop_handler.heros = []
+                enemy_handler.goblins = []
+                enemy_handler.iteration = 0
+                player.gold = 30
+                player.health = 3
         if event.type == pygame.MOUSEBUTTONDOWN:
             x, y = pygame.mouse.get_pos()
             # example of using check empty, prints false if hero is in square/it isn't swapnable
@@ -122,7 +112,7 @@ while gamin:
     player.frame_check()
 
     # the screen is drawn over with a solid color and then all objects are drawn on
-    screen.fill((0,255,255))
+    screen.fill((0,210,245))
     render_subtile_map(screen)
     render_forground(screen)
     screen.blit(player.gold_mine, (0, 88))
