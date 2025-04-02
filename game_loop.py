@@ -53,12 +53,18 @@ def make_goblins():
 # 360 * 640 is the standard ratio which is 16/9
 # scale factor is used for anything that uses screen units
 WIDTH = pygame.display.Info().current_w
+# this ensures a even scale factor so that all screen functions work
+for n in range(1000):
+    if n < (WIDTH/640) < n+1:
+        WIDTH = n*640
+        break
 HEIGHT = WIDTH*9/16
 scale_factor = HEIGHT/360
 display = pygame.display.set_mode((WIDTH, HEIGHT))
 screen = pygame.Surface((640, 360))
 pygame.display.set_caption('Goblins vs Heroes')
 pygame.display.toggle_fullscreen()
+print(WIDTH, scale_factor)
 
 enemy_handler.spawn_algorithm()
 

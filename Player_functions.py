@@ -12,8 +12,8 @@ class player_functions():
         self.state = ''
         self.gpe = 5    # gold per elim
     
-        self.gold_mine_inactive = pygame.image.load('Tiny Swords\Tiny Swords (Update 010)\Resources\Gold Mine\GoldMine_Inactive.png')
-        self.gold_mine_active = pygame.image.load('Tiny Swords\Tiny Swords (Update 010)\Resources\Gold Mine\GoldMine_Active.png')
+        self.gold_mine_inactive = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Resources\\Gold Mine\\GoldMine_Inactive.png')
+        self.gold_mine_active = pygame.image.load('Tiny Swords\\Tiny Swords (Update 010)\\Resources\\Gold Mine\\GoldMine_Active.png')
         self.gold_mine = self.gold_mine_inactive
 
     def gold_check(self):
@@ -38,6 +38,7 @@ class player_functions():
             f'wave count {self.goblin_handler.iteration}',
             f'{self.gold} gold',
             f'{self.health} health',
+            f'{pygame.mouse.get_pos()}',
             self.state
         ]
         for num in range(len(info)):
